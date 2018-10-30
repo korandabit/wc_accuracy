@@ -9,30 +9,22 @@ jsPsych.plugins["wc-final"] = (function () {
     plugin.info = {
         name: 'wc-final',
         description: '',
-        parameters: {
-            stimulus: {
-                type: jsPsych.plugins.parameterType.HTML_STRING,
-                pretty_name: 'Stimulus',
-                default: undefined,
-                description: 'The HTML string to be displayed'
-            },
-            participant: {
-                type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Participant index',
-                default: null,
-                description: 'The index number of the participant'
-            }
-        }
+        parameters: {}
     };
 
     plugin.trial = function (display_element, trial) {
 
         // save experiment data
         const data = jsPsych.data.get().filter({test_part: 'target'}).values();
-        console.log(data);
-        saver.save(data, trial.participant);
 
-        display_element.innerHTML = `<div>${trial.stimulus}</div>`;
+        wc.data().save(data);
+
+        const div = document.createElement("div");
+        div.innerHTML = `<div><p>Thank you for your participation.`;
+        if (isTurk) div.innerHTML += ` Your unique code is:</p>\`<p style = 'font-size:40px'>${code}`;
+        div.innerHTML += `</p></div>`;
+
+        display_element.appendChild(div);
     };
 
     return plugin;
